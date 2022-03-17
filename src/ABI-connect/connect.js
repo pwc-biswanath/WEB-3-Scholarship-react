@@ -2,6 +2,7 @@ import React from "react";
 import contract from "../contract/Scholarship";
 import web3 from "../web3";
 
+console.log("=============", contract);
 const pickFunction = (service) => {
   switch (service) {
     case "studentRegistration":

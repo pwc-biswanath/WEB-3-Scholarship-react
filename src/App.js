@@ -49,8 +49,8 @@ const App = () => {
         <Route path="/student-list" element={<StudentList />} />
         <Route path="/student-details" element={<StudentDetails />} />
         <Route path="/all-issued-device" element={<AllIssuedList />} />
-        <Route path="/admin-wallet" element={<AdminWallet/>} />
-        <Route path="/all-transaction" element={<AllTransaction/>} />
+        <Route path="/admin-wallet" element={<AdminWallet />} />
+        <Route path="/all-transaction" element={<AllTransaction />} />
       </Routes>
       <div></div>
       <div

@@ -27,29 +27,16 @@ const StudentRegistration = () => {
   const [start, setStart] = useState(false);
   const [response, setResponse] = useState(null);
 
-  const getDataFromDatabase = (name, rollNo, dob) => {
-    fetch("http://localhost:6060/posts")
-      .then((res) => res.json())
-      .then(async (json) => {
-        const validateStudent = json.data.find(
-          (data) => data.uniqueNo === rollNo
-        );
-        if (validateStudent) {
-          setStart(true);
-          const responseData = await BlockChatinTransction(
-            "studentRegistration",
-            name,
-            rollNo,
-            validateStudent?.score,
-            dob
-          );
-          setResponse(responseData);
-        } else {
-          swal("Sorry you are not validated", {
-            icon: "error",
-          });
-        }
-      });
+  const getDataFromDatabase = async (name, rollNo, dob) => {
+    setStart(true);
+    const responseData = await BlockChatinTransction(
+      "studentRegistration",
+      name,
+      rollNo,
+      143,
+      dob
+    );
+    setResponse(responseData);
   };
 
   useEffect(() => {
