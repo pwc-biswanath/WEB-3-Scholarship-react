@@ -1,6 +1,8 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const Web3 = require("web3");
 const compiledFactory = require("./build/Scholarship.json");
+const path = require("path");
+const fs = require("fs-extra");
 
 const provider = new HDWalletProvider(
   "frame wool share waste scare vivid fade link kite side poet about",
@@ -22,6 +24,15 @@ const deploy = async () => {
     .send({ gas: "4700000", from: accounts[0] });
 
   console.log("Contract deployed to", result.options.address);
+
+  const storeAddressPath = path.resolve(__dirname, "address");
+  fs.removeSync(storeAddressPath);
+  fs.ensureDirSync(storeAddressPath);
+  fs.outputJsonSync(
+    path.resolve(storeAddressPath, "Address.json"),
+    result.options.address
+  );
+
   provider.engine.stop();
 };
 deploy();

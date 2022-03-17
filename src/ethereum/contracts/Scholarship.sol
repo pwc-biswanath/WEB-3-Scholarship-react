@@ -53,7 +53,7 @@ contract Scholarship {
     uint public minimumScore;
     uint public amount;
     
-    function Lottery() public {
+    function Scholarship() public {
         manager = msg.sender;
         
     }
