@@ -1,8 +1,7 @@
 import React from "react";
-import contract from "../contract/Scholarship";
+import contract from "../ethereum/Scholarship";
 import web3 from "../web3";
 
-console.log("=============", contract);
 const pickFunction = (service) => {
   switch (service) {
     case "studentRegistration":
@@ -45,6 +44,24 @@ export const BlockChatinTransction = async (service, ...props) => {
     .send({
       from: accounts[0],
       value: 0,
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      const errorData = { error };
+      return { error: errorData.error };
+    });
+  return responseData;
+};
+
+export const BlockChatinEnterTransction = async (amount) => {
+  const callService = contract.methods.enter;
+  const accounts = await web3.eth.getAccounts();
+  const responseData = await callService()
+    .send({
+      from: accounts[0],
+      value: amount,
     })
     .then((data) => {
       return data;

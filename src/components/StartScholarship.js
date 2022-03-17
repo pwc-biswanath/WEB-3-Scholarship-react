@@ -1,35 +1,29 @@
-import React, { useContext, useState, useEffect } from "react";
-// import Form from 'react-bootstrap/Form';
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import swal from "sweetalert";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import lottery from "../contract/Scholarship";
-import { AccountContest } from "../App";
-import web3 from "../web3";
-import LinearProgress from "@mui/material/LinearProgress";
-import TransctionList from "./TransctionList";
+import {
+  GetContractBalance,
+  BlockChatinEnterTransction,
+} from "../ABI-connect/connect";
+import TransctionModal from "./shared/TransctionModal";
 
 const LoginSchema = Yup.object().shape({
   number: Yup.string().trim().required("Amount is required"),
 });
 
 const FormUI = () => {
-  const account = useContext(AccountContest);
   const [balance, setBalance] = useState(null);
   const [start, setStart] = useState(false);
-  const [depositors, setDepositors] = useState(null);
+  const [response, setResponse] = useState(null);
 
   async function fetchData() {
     setStart(true);
-    const balance = await web3.eth.getBalance(lottery.options.address);
+    const balance = await GetContractBalance();
     setBalance(balance);
-
-    const depositors = await lottery.methods.getListOfDepositors().call();
-    setDepositors(depositors);
-
     setStart(false);
   }
 
@@ -39,24 +33,9 @@ const FormUI = () => {
 
   const inititate = async (number) => {
     setStart(true);
-    await lottery.methods
-      .enter()
-      .send({
-        from: account[0],
-        value: number,
-      })
-      .then((data) => {
-        swal("Process successfully completed", {
-          icon: "success",
-        });
-        fetchData();
-      })
-      .catch((error) => {
-        swal(error.message, {
-          icon: "error",
-        });
-        setStart(false);
-      });
+    const responseData = await BlockChatinEnterTransction(number);
+    setResponse(responseData);
+    fetchData();
   };
 
   const saveData = (value) => {
@@ -76,7 +55,7 @@ const FormUI = () => {
 
   return (
     <>
-      {start && <LinearProgress color="secondary" />}
+      {start && <TransctionModal response={response} />}
 
       <Container
         style={{
@@ -158,13 +137,6 @@ const FormUI = () => {
             </div>
           </Col>
         </Row>
-        {/* <Row style={{ marginTop: 30 }}>
-          <Col>
-            <h3>Transctions </h3>
-            <p>List of amount deposit</p>
-            <TransctionList depositors={depositors} />
-          </Col>
-        </Row> */}
       </Container>
     </>
   );
